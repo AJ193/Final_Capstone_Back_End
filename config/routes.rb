@@ -10,4 +10,5 @@ Rails.application.routes.draw do
                      }
 
   resources :cars, only: %i[index show create destroy]
+  resources :reservations, only: %i[index create destroy]
 end
