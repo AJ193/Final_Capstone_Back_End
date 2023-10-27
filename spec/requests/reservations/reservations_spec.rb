@@ -4,7 +4,6 @@ require 'rails_helper'
 require 'devise/jwt/test_helpers'
 
 RSpec.describe 'Reservations API', type: :request do
-
   describe 'GET /reservations' do
     context 'when the user is authenticated' do
       it 'returns a list of reservations for the authenticated user' do
@@ -17,9 +16,9 @@ RSpec.describe 'Reservations API', type: :request do
         car = Car.create(model: 'Car 1', year: 2023, picture: 'car1.jpg')
         headers = { 'Accept' => 'application/json', 'Content-Type' => 'application/json' }
         auth_headers = Devise::JWT::TestHelpers.auth_headers(headers, user)
-        
-        Reservation.create(start_date: '2023-10-30', end_date: '2023-11-05', user: user, car: car)
-        Reservation.create(start_date: '2023-11-23', end_date: '2023-11-28', user: user, car: car)
+
+        Reservation.create(start_date: '2023-10-30', end_date: '2023-11-05', user:, car:)
+        Reservation.create(start_date: '2023-11-23', end_date: '2023-11-28', user:, car:)
 
         # Make a GET request to /reservations
         get '/reservations', headers: Devise::JWT::TestHelpers.auth_headers(headers, user)
@@ -52,13 +51,13 @@ RSpec.describe 'Reservations API', type: :request do
     context 'when the user is authenticated' do
       it 'creates a new reservation' do
         car = Car.create(model: 'Car 1', year: 2023, picture: 'car1.jpg')
-        
+
         resigst_params = {
-            user: {
-              name: 'Tester',
-              email: 'tester-created@mail.com',
-              password: 'password123'
-            }
+          user: {
+            name: 'Tester',
+            email: 'tester-created@mail.com',
+            password: 'password123'
+          }
         }
 
         post '/signup', params: resigst_params
@@ -72,8 +71,9 @@ RSpec.describe 'Reservations API', type: :request do
             end_date: '2023-11-05'
           }
         }
-        
-        post '/reservations', headers: { 'Accept' => 'application/json', 'Authorization' => "Bearer #{jwt_token}" }, params: reservation_params
+
+        post '/reservations', headers: { 'Accept' => 'application/json', 'Authorization' => "Bearer #{jwt_token}" },
+                              params: reservation_params
 
         expect(response).to have_http_status(:created)
         expect(response.content_type).to eq('application/json; charset=utf-8')
@@ -91,7 +91,7 @@ RSpec.describe 'Reservations API', type: :request do
     context 'when the user is not authenticated' do
       it 'returns a 401 Unauthorized response' do
         car = Car.create(model: 'Car 1', year: 2023, picture: 'car1.jpg')
-        
+
         reservation_params = {
           reservation: {
             car_id: car.id,
@@ -110,16 +110,6 @@ RSpec.describe 'Reservations API', type: :request do
   describe 'DELETE /reservations/:id' do
     context 'when the user is authenticated' do
       it 'deletes a reservation' do
-        # Create a reservation for the user
-        # resigst_params = {
-        #     user: {
-        #       name: 'Tester',
-        #       email: 'tester-created@mail.com',
-        #       password: 'password123'
-        #     }
-        # }
-        
-        # post '/signup', params: resigst_params
         user = User.new(
           name: 'John Doe',
           email: 'john.doe@example.com',
@@ -127,7 +117,7 @@ RSpec.describe 'Reservations API', type: :request do
         )
         car = Car.create(model: 'Car 1', year: 2023, picture: 'car1.jpg')
 
-        reservation = Reservation.create(start_date: '2023-10-30', end_date: '2023-11-05', user: user, car: car)
+        reservation = Reservation.create(start_date: '2023-10-30', end_date: '2023-11-05', user:, car:)
         # Make a DELETE request to delete the reservation
         delete "/reservations/#{reservation.id}", headers: Devise::JWT::TestHelpers.auth_headers({}, user)
 
@@ -149,8 +139,7 @@ RSpec.describe 'Reservations API', type: :request do
         )
         car = Car.create(model: 'Car 1', year: 2023, picture: 'car1.jpg')
 
-        reservation = Reservation.create(start_date: '2023-10-30', end_date: '2023-11-05', user: user, car: car)
-        puts reservation.inspect
+        reservation = Reservation.create(start_date: '2023-10-30', end_date: '2023-11-05', user:, car:)
         # Make a DELETE request to delete the reservation without authenticating
         delete "/reservations/#{reservation.id}"
 
