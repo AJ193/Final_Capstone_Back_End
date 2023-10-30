@@ -1,6 +1,12 @@
 class CarsController < ApplicationController
   before_action :set_car, only: %i[show destroy]
 
+  # GET car model
+  def car_models
+    models = Car.pluck(:model)
+    render json: { car_models: models }, status: :ok
+  end
+
   # GET /cars
   def index
     @cars = Car.all
