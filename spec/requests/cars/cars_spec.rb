@@ -3,9 +3,9 @@ require 'rails_helper'
 RSpec.describe 'Cars API', type: :request do
   # Before each test, create some sample cars in the database.
   before do
-    @car = Car.create(model: 'Car 1', year: 2023, picture: 'car1.jpg')
-    Car.create(model: 'Car 2', year: 2024, picture: 'car2.jpg')
-    @car_delete = Car.create(model: 'Car to Delete', year: 2023, picture: 'delete_me.jpg')
+    @car = Car.create(model: 'Car 1', year: 2023, city: 'car1.jpg', price_per_day: 2)
+    Car.create(model: 'Car 2', year: 2024, city: 'car2.jpg', price_per_day: 2)
+    @car_delete = Car.create(model: 'Car to Delete', year: 2023, city: 'delete_me.jpg', price_per_day: 2)
   end
 
   describe 'GET /cars' do
@@ -40,7 +40,7 @@ RSpec.describe 'Cars API', type: :request do
       # Verify specific attributes of the car
       expect(car['data']['model']).to eq(@car.model)
       expect(car['data']['year']).to eq(@car.year)
-      expect(car['data']['picture']).to eq(@car.picture)
+      expect(car['data']['city']).to eq(@car.city)
     end
 
     it 'returns a 404 Not Found response for an invalid car id' do
@@ -55,11 +55,10 @@ RSpec.describe 'Cars API', type: :request do
     context 'with valid parameters' do
       it 'creates a new car' do
         car_params = {
-          car: {
-            model: 'New Car',
-            year: 2023,
-            picture: 'new_car.jpg'
-          }
+          model: 'New Car',
+          year: 2023,
+          city: 'new_car.jpg',
+          price_per_day: 2
         }
 
         post '/cars', params: car_params
@@ -76,7 +75,7 @@ RSpec.describe 'Cars API', type: :request do
         # Verify specific attributes of the created car
         expect(car['data']['model']).to eq('New Car')
         expect(car['data']['year']).to eq(2023)
-        expect(car['data']['picture']).to eq('new_car.jpg')
+        expect(car['data']['city']).to eq('new_car.jpg')
       end
     end
 
@@ -85,7 +84,7 @@ RSpec.describe 'Cars API', type: :request do
         invalid_params = {
           car: {
             year: 2023,
-            picture: 'invalid_car.jpg'
+            city: 'invalid_car.jpg'
           }
         }
 
