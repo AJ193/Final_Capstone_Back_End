@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class CarsController < ApplicationController
   before_action :set_car, only: %i[show destroy]
 
@@ -9,7 +7,7 @@ class CarsController < ApplicationController
 
     @cars.each do |car|
       image_url = rails_blob_url(car.image) if car.image.attached?
-      car.image = image_url      
+      car.picture = image_url
     end
 
     render json: { status: { code: 200, message: 'Fetch all cars successfully.' }, data: @cars }, status: :ok
@@ -25,6 +23,8 @@ class CarsController < ApplicationController
     @car = Car.new(car_params)
 
     if @car.save
+      image_url = rails_blob_url(@car.image) if @car.image.attached?
+      @car.picture = image_url
       render json: { status: { code: 200, message: 'Succesfully added car' }, data: @car }, status: :created
     else
       render json: @car.errors, status: :unprocessable_entity
@@ -46,11 +46,11 @@ class CarsController < ApplicationController
   def set_car
     @car = Car.find(params[:id])
     image_url = rails_blob_url(@car.image) if @car.image.attached?
-    @car.image = image_url
+    @car.picture = image_url
   end
 
   # Only allow a list of trusted parameters through.
   def car_params
-    params.permit(:model, :year, :image)
+    params.permit(:model, :year, :image, :price_per_day, :city)
   end
 end
