@@ -13,6 +13,10 @@ Rails.application.routes.draw do
                        registrations: 'users/registrations'
                      }
 
-  resources :cars, only: %i[index show create destroy]
+  resources :cars, only: %i[index show create destroy] do
+    collection do
+      get 'models', to: 'cars#car_models'
+    end
+  end
   resources :reservations, only: %i[index create destroy]
 end
