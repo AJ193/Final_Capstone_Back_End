@@ -4,11 +4,27 @@ class Users::SessionsController < Devise::SessionsController
 
   private
 
+  # def respond_with(current_user, _opts = {})
+  #   render json: {
+  #     status: {
+  #       code: 200, message: 'Logged in successfully.',
+  #       data: { user: UserSerializer.new(current_user).serializable_hash[:data][:attributes] }
+  #     }
+  #   }, status: :ok
+  # end
+
   def respond_with(current_user, _opts = {})
+    # Generate a JWT token
+    jwt_token = generate_jwt_token(current_user)
+
     render json: {
       status: {
-        code: 200, message: 'Logged in successfully.',
-        data: { user: UserSerializer.new(current_user).serializable_hash[:data][:attributes] }
+        code: 200,
+        message: 'Logged in successfully.',
+        data: {
+          user: UserSerializer.new(current_user).serializable_hash[:data][:attributes],
+          jwt: jwt_token
+        }
       }
     }, status: :ok
   end
@@ -31,5 +47,22 @@ class Users::SessionsController < Devise::SessionsController
         message: "Couldn't find an active session."
       }, status: :unauthorized
     end
+  end
+
+  private
+
+  def generate_jwt_token(user)
+    # Your JWT token generation logic here
+    # You'll need to use the 'jwt' gem or any other JWT library
+    # For example, using the 'jwt' gem:
+    
+    payload = {
+      sub: user.id,
+      exp: Time.now.to_i + 3600 # Set the expiration time as desired
+    }
+    
+    jwt_token = JWT.encode(payload, Rails.application.credentials.devise_jwt_secret_key, 'HS256')
+    
+    jwt_token
   end
 end
