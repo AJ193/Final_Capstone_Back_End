@@ -15,7 +15,6 @@ RSpec.describe 'Reservations API', type: :request do
 
         car = Car.create(model: 'Car 1', year: 2023, picture: 'car1.jpg')
         headers = { 'Accept' => 'application/json', 'Content-Type' => 'application/json' }
-        auth_headers = Devise::JWT::TestHelpers.auth_headers(headers, user)
 
         Reservation.create(start_date: '2023-10-30', end_date: '2023-11-05', user:, car:)
         Reservation.create(start_date: '2023-11-23', end_date: '2023-11-28', user:, car:)
@@ -62,7 +61,7 @@ RSpec.describe 'Reservations API', type: :request do
 
         post '/signup', params: resigst_params
 
-        jwt_token = response.headers['Authorization'].split(' ').last
+        jwt_token = response.headers['Authorization'].split.last
 
         reservation_params = {
           reservation: {
