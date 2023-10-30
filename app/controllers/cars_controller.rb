@@ -7,6 +7,11 @@ class CarsController < ApplicationController
   def index
     @cars = Car.all
 
+    @cars.each do |car|
+      image_url = rails_blob_url(car.image) if car.image.attached?
+      car.image = image_url      
+    end
+
     render json: { status: { code: 200, message: 'Fetch all cars successfully.' }, data: @cars }, status: :ok
   end
 
@@ -40,10 +45,12 @@ class CarsController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_car
     @car = Car.find(params[:id])
+    image_url = rails_blob_url(@car.image) if @car.image.attached?
+    @car.image = image_url
   end
 
   # Only allow a list of trusted parameters through.
   def car_params
-    params.require(:car).permit(:model, :year, :picture)
+    params.permit(:model, :year, :image)
   end
 end
