@@ -50,43 +50,47 @@ RSpec.describe 'cars', type: :request do
                  }
                }
 
-        example 'List of cars' => {
-
-          status: { code: 200, message: 'Fetch all cars successfully.' },
-          data:[
-            {
-              "id": 5,
-              "model": "Honda Accord",
-              "year": 2022,
-              "picture": "http://localhost:5000/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBCdz09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--e6399d7d60e6424e7d5271228564cb6eb84f851f/download.jpeg",
-              "created_at": "2023-10-30T13:07:11.719Z",
-              "updated_at": "2023-10-30T13:07:11.746Z",
-              "city": "San Fransisco",
-              "price_per_day": 30
-            },
-            {
-              "id": 6,
-              "model": "Toyota Supra",
-              "year": 2022,
-              "picture": "http://localhost:5000/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBDQT09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--cfc6de97918a8e371a25e80398fb500e84240ee9/download.jpeg",
-              "created_at": "2023-10-30T13:08:07.643Z",
-              "updated_at": "2023-10-30T13:08:07.666Z",
-              "city": "Jakarta",
-              "price_per_day": 30
-            },
-            {
-              "id": 7,
-              "model": "Lamborghini Aventador",
-              "year": 2022,
-              "picture": "http://localhost:5000/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBDUT09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--276860267bc2ed930b13f8e18ce6ca86c321f879/download.jpeg",
-              "created_at": "2023-10-30T13:09:30.098Z",
-              "updated_at": "2023-10-30T13:09:30.109Z",
-              "city": "Tokyo",
-              "price_per_day": 30
-            },  
-          ]
-        }
-        run_test!
+          let(:cars_list) do
+            [
+              {
+                "id": 5,
+                "model": "Honda Accord",
+                "year": 2022,
+                "picture": "http://localhost:5000/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBCdz09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--e6399d7d60e6424e7d5271228564cb6eb84f851f/download.jpeg",
+                "created_at": "2023-10-30T13:07:11.719Z",
+                "updated_at": "2023-10-30T13:07:11.746Z",
+                "city": "San Fransisco",
+                "price_per_day": 30
+              },
+              {
+                "id": 6,
+                "model": "Toyota Supra",
+                "year": 2022,
+                "picture": "http://localhost:5000/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBDQT09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--cfc6de97918a8e371a25e80398fb500e84240ee9/download.jpeg",
+                "created_at": "2023-10-30T13:08:07.643Z",
+                "updated_at": "2023-10-30T13:08:07.666Z",
+                "city": "Jakarta",
+                "price_per_day": 30
+              },
+              {
+                "id": 7,
+                "model": "Lamborghini Aventador",
+                "year": 2022,
+                "picture": "http://localhost:5000/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBDUT09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--276860267bc2ed930b13f8e18ce6ca86c321f879/download.jpeg",
+                "created_at": "2023-10-30T13:09:30.098Z",
+                "updated_at": "2023-10-30T13:09:30.109Z",
+                "city": "Tokyo",
+                "price_per_day": 30
+              },  
+            ]
+          end
+        
+          run_test! do |response|
+            parsed_response = JSON.parse(response.body, symbolize_names: true)
+            expect(parsed_response[:status][:code]).to eq(200)
+            expect(parsed_response[:status][:message]).to eq('Fetch all cars successfully.')
+            expect(parsed_response[:data]).to eq(cars_list)
+          end
       end
     end
 
@@ -126,22 +130,28 @@ RSpec.describe 'cars', type: :request do
                  }
                }
 
-        example 'Creating a car' => {
-          status: { code: 200, message: 'Car created successfully' },
-          data: {
-            id: 1,
-            model: 'Toyota Supra',
-            year: 2020,
-            picture: 'https://example.com/car_image.jpg',
-            created_at: '2023-11-02T12:00:00Z',
-            updated_at: '2023-11-02T12:00:00Z',
-            city: 'San Francisco',
-            price_per_day: 20
-          }
-        }
-
-        run_test!
+               let(:example_car) do
+                {
+                  status: { code: 200, message: 'Car created successfully' },
+                  data: {
+                    id: 1,
+                    model: 'Toyota Supra',
+                    year: 2020,
+                    picture: 'https://example.com/car_image.jpg',
+                    created_at: '2023-11-02T12:00:00Z',
+                    updated_at: '2023-11-02T12:00:00Z',
+                    city: 'San Francisco',
+                    price_per_day: 20
+                  }
+                }
+              end
+      
+              run_test! do |response|
+                parsed_response = JSON.parse(response.body, symbolize_names: true)
+                expect(parsed_response).to eq(example_car)
+              end
       end
+    end
   end
 
   path '/cars/{id}' do
