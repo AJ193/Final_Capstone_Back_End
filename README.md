@@ -2,7 +2,7 @@
 
 <div align="center">
 
-  <h1><b>Car Rent Fullstack - Rails Backend</b></h1>
+  <h1><b>Car Rental Fullstack App </b></h1>
 
 </div>
 
@@ -10,7 +10,7 @@
 
 ## 📗 Table of Contents
 
-- [📖 Car Rent Fullstack - Rails Backend ](#-car-rent-fullstack---rails-backend-)
+- [📖 Car Rental Fullstack App ](#-car-rental-fullstack-App)
   - [🛠 Built With ](#-built-with-)
     - [Tech Stack ](#tech-stack-)
     - [Key Features ](#key-features-)
@@ -31,9 +31,9 @@
 
 <!-- PROJECT DESCRIPTION -->
 
-# 📖 Car Rent Fullstack - Rails Backend <a name="about-project"></a>
+# 📖 Car Rental Fullstack App <a name="about-project"></a>
 
-**Car Rent Fullstack - Rails Backend** is a backend project for fullstack app rent a car apps
+**Car Rental Fullstack App** is a backend project for fullstack app rent a car apps
 This is the link to the [frontend](https://github.com/AJ193/Final_Capstone_Front_End)
 ## 🛠 Built With <a name="built-with"></a>
 
@@ -236,7 +236,7 @@ or you can access it from ```localhost:5000/api-docs``` if you already run the p
 
 Contributions, issues, and feature requests are welcome!
 
-Feel free to check the [issues page](https://github.com/ichsansandy/rails-two-apps/issues).
+Feel free to check the [issues page](https://github.com/AJ193/Final_Capstone_Back_End/issues).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
