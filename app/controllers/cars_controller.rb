@@ -21,7 +21,11 @@ class CarsController < ApplicationController
 
   # GET /cars/1
   def show
-    render json: { status: { code: 200, message: 'Fetch car detail successfully.' }, data: @car }, status: :ok
+    if @car
+      render json: { status: { code: 200, message: 'Fetch car detail successfully.' }, data: @car }, status: :ok
+    else
+      render json: { status: 404, message: 'Car not found' }, status: :not_found
+    end
   end
 
   # POST /cars
@@ -39,10 +43,14 @@ class CarsController < ApplicationController
 
   # DELETE /cars/1
   def destroy
-    if @car.destroy
-      render json: { status: { code: 200, message: 'Delete successfully.' } }, status: :ok
+    if @car
+      if @car.destroy
+        render json: { status: { code: 200, message: 'Delete successfully.' } }, status: :ok
+      else
+        render json: { status: 400, message: "Couldn't delete car" }, status: :bad_request
+      end
     else
-      render json: { status: 400, message: "Couldn't delete car" }, status: :bad_request
+      render json: { status: 404, message: 'Car not found' }, status: :not_found
     end
   end
 
@@ -53,6 +61,8 @@ class CarsController < ApplicationController
     @car = Car.find(params[:id])
     image_url = rails_blob_url(@car.image) if @car.image.attached?
     @car.picture = image_url
+  rescue ActiveRecord::RecordNotFound
+    @car = nil
   end
 
   # Only allow a list of trusted parameters through.
