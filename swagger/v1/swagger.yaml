@@ -180,6 +180,8 @@ paths:
                   properties:
                     car_id:
                       type: string
+                    city:
+                      type: string
                     start_date:
                       type: string
                       format: date
