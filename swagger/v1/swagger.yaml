@@ -4,90 +4,272 @@ info:
   title: Car Rental
   version: v1
 paths:
-  "/cars/models":
+  '/cars/models':
     get:
       summary: car_models car
+      tags:
+        - Cars
       responses:
         '200':
           description: successful
-  "/cars":
+  '/cars':
     get:
       summary: list cars
+      tags:
+        - Cars
       responses:
         '200':
           description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                      message:
+                        type: string
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        model:
+                          type: string
+                        year:
+                          type: integer
+                        picture:
+                          type: string
+                        created_at:
+                          type: string
+                          format: date-time
+                        updated_at:
+                          type: string
+                          format: date-time
+                        city:
+                          type: string
+                        price_per_day:
+                          type: integer
+                      required:
+                        - id
+                        - model
+                        - year
+                        - picture
+                        - created_at
+                        - updated_at
+                        - city
+                        - price_per_day
     post:
       summary: create car
+      tags:
+        - Cars
+      parameters: []
       responses:
         '200':
           description: successful
-  "/cars/{id}":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                      message:
+                        type: string
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      model:
+                        type: string
+                      year:
+                        type: integer
+                      picture:
+                        type: string
+                      created_at:
+                        type: string
+                        format: date-time
+                      updated_at:
+                        type: string
+                        format: date-time
+                      city:
+                        type: string
+                      price_per_day:
+                        type: integer
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                model:
+                  type: string
+                  description: The model for the car that will be added
+                year:
+                  type: integer
+                  format: int32
+                  description: The year for the car that will be added
+                price_per_day:
+                  type: integer
+                  format: int32
+                  description: The price per day for the car that will be added
+                image:
+                  type: string
+                  format: binary
+                  description: The image for the car that will be added (Should be image file type)
+                city:
+                  type: string
+                  description: The city for the car that will be added
+  '/cars/{id}':
     parameters:
-    - name: id
-      in: path
-      description: id
-      required: true
-      schema:
-        type: string
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: string
     get:
       summary: show car
+      tags:
+        - Cars
       responses:
         '200':
           description: successful
     delete:
       summary: delete car
+      tags:
+        - Cars
       responses:
         '200':
           description: successful
-  "/reservations":
+  '/reservations':
     get:
       summary: list reservations
+      tags:
+        - Reservations
+      security:
+        - BearerAuth: []
       responses:
         '200':
           description: successful
     post:
       summary: create reservation
-      responses:
-        '200':
-          description: successful
-  "/reservations/{id}":
+      tags:
+        - Reservations
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reservation:
+                  type: object
+                  properties:
+                    car_id:
+                      type: string
+                    start_date:
+                      type: string
+                      format: date
+                    end_date:
+                      type: string
+                      format: date
+  '/reservations/{id}':
     parameters:
-    - name: id
-      in: path
-      description: id
-      required: true
-      schema:
-        type: string
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: string
     delete:
       summary: delete reservation
+      tags:
+        - Reservations
+      security:
+      - BearerAuth: []
       responses:
         '200':
           description: successful
-  "/signup":
+  '/signup':
     post:
       summary: create registration
+      tags:
+        - User
       responses:
         '200':
           description: successful
-  "/login":
-    get:
-      summary: new session
-      responses:
-        '200':
-          description: successful
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      description: The name of the user
+                    email:
+                      type: string
+                      description: The email required for login
+                    password:
+                      type: string
+                      description: The password required for login
+  '/login':
     post:
       summary: create session
+      tags:
+        - User
       responses:
         '200':
           description: successful
-  "/logout":
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    email:
+                      type: string
+                      description: The email required for login
+                    password:
+                      type: string
+                      description: The password required for login
+  '/logout':
     delete:
       summary: delete session
+      tags:
+        - User
       responses:
         '200':
           description: successful
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
 servers:
-- url: https://{defaultHost}
-  variables:
-    defaultHost:
-      default: www.example.com
+  - url: http://{defaultHost}
+    variables:
+      defaultHost:
+        default: localhost:5000
