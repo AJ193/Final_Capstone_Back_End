@@ -16,4 +16,4 @@ test:
 
 production:
   <<: *default
-  database: final_capstone_prod
+  url: <%= ENV['DATABASE_URL'] %>
